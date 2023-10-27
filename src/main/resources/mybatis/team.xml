@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.spring_team.model.TeamMapper">
+    <select id="list" parameterType="Map" resultType="com.spring_team.model.TeamDTO">
+        select teamno, tname, skills, phone, address, zipcode, gender, rdate   from team
+        <where>
+            <if test="col == 'tname'"> tname like concat('%' , #{word} , '%') </if>
+            <if test="col == 'skills'"> skills like concat('%' , #{word} , '%') </if>
+            <if test="col == 'phone'"> phone like concat('%' , #{word} , '%') </if>
+        </where>
+        ORDER BY teamno DESC
+        limit #{sno}, #{eno}
+    </select>
+
+
+    <select id="total" parameterType="Map" resultType="int">
+        select count(*) from team
+        <where>
+            <if test="col == 'tname'"> tname like concat('%' , #{word} , '%') </if>
+            <if test="col == 'skills'"> skills like concat('%' , #{word} , '%') </if>
+            <if test="col == 'phone'"> phone like concat('%' , #{word} , '%') </if>
+        </where>
+    </select>
+
+
+    <insert id="create" parameterType="com.spring_team.model.TeamDTO">
+        INSERT INTO team(tname, skills, phone, address, zipcode, gender, rdate)
+        VALUES(#{tname}, #{skills},#{phone},#{address},#{zipcode} , #{gender}, sysdate());
+    </insert>
+
+
+    <select id="read" parameterType="int" resultType="com.spring_team.model.TeamDTO">
+        select * from team
+        where teamno= #{teamno};
+    </select>
+
+    <update id="update" parameterType="com.spring_team.model.TeamDTO">
+        update team
+        set tname = #{tname},
+            skills = #{skills},
+            phone = #{phone},
+            address = #{address},
+            zipcode = #{zipcode},
+            gender = #{gender}
+        where teamno = #{teamno}
+    </update>
+
+    <delete id="delete" parameterType="int">
+        delete from team
+        where teamno = #{teamno}
+    </delete>
+
+</mapper>
